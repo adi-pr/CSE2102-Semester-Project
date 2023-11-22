@@ -1,5 +1,5 @@
 class Database:
-    _instance = None
+    _instance = Non
     connection = None # TODO: code to initialize database connection here | replace "None"
     cursor = None # ! Database cursor object code goes here
     
