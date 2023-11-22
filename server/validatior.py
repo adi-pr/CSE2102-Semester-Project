@@ -1,2 +1,4 @@
+""" Module providing functions to validate data """
+
 class Validator:
-    pass
+    """ Class representing a validator """
