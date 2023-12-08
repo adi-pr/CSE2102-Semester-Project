@@ -46,13 +46,14 @@ class Database:
         """Code to add a vehicle to the vehicle table"""
         try:
             self.cursor.execute(
-                "INSERT INTO driver_table (district, section, insuranceExp, fitnessExp, licenseExp, fuelType, unladenWeight, model, make, engineId, chassisId) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)",
+                "INSERT INTO vehicle (district, section, insuranceExp, fitnessExp, licenseExp, fuelType, unladenWeight, model, make, engineId, chassisId) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)",
                 (
                     vehicle.district,
                     vehicle.section,
                     vehicle.insurance_exp,
                     vehicle.fitness_exp,
                     vehicle.license_exp,
+                    vehicle.fuel_type,
                     vehicle.unladen_weight,
                     vehicle.model,
                     vehicle.make,
@@ -60,16 +61,17 @@ class Database:
                     vehicle.chassis_id,
                 ),
             )
+            self.connection.commit()
 
         except mysql.connector.Error as e:
-            print(f"Error executing SQL for table {vehicle.model}: {e}")
+            print(f"Error executing SQL for table vehicle: {e}")
             self.connection.rollback()
 
     def write_driver(self, driver):
         """Code to add a driver to the driver table"""
         try:
             self.cursor.execute(
-                "INSERT INTO driver_table (firstName, lastName, address, phoneNumber, department) VALUES (%s, %s, %s, %s, %s)",
+                "INSERT INTO driver (firstName, lastName, address, phoneNumber, department) VALUES (%s, %s, %s, %s, %s)",
                 (
                     driver.first_name,
                     driver.last_name,
@@ -78,36 +80,39 @@ class Database:
                     driver.department,
                 ),
             )
+            self.connection.commit()
         except mysql.connector.Error as e:
-            print(f"Error executing SQL for table {driver.firstName}: {e}")
+            print(f"Error executing SQL for table driver: {e}")
             self.connection.rollback()
 
     def write_repair(self, repair):
         """Code to add a repair to the repair table"""
         try:
             self.cursor.execute(
-                "INSERT INTO repair_table (price, description, repairText) VALUES (%s, %s, %s)",
+                "INSERT INTO repair (price, description, repairText) VALUES (%s, %s, %s)",
                 (
                     repair.price,
                     repair.description,
                     repair.repair_text,
                 ),
             )
+            self.connection.commit()
         except mysql.connector.Error as e:
-            print(f"Error executing SQL for table {repair.description}: {e}")
+            print(f"Error executing SQL for table repair: {e}")
             self.connection.rollback()
 
     def write_mechanic(self, mechanic):
         """Code to add a mechanic to the mechanic table"""
         try:
             self.cursor.execute(
-                "INSERT INTO mechanic_table (name, phoneNumber, address) VALUES (%s, %s, %s)",
+                "INSERT INTO mechanic (name, phoneNumber, address) VALUES (%s, %s, %s)",
                 (
                     mechanic.name,
                     mechanic.phone_number,
                     mechanic.address,
                 ),
             )
+            self.connection.commit()
         except mysql.connector.Error as e:
-            print(f"Error executing SQL for table {mechanic.name}: {e}")
+            print(f"Error executing SQL for table mechanic: {e}")
             self.connection.rollback()
