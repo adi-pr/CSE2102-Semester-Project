@@ -50,15 +50,14 @@ class Database:
                 (
                     vehicle.district,
                     vehicle.section,
-                    vehicle.insuranceExp,
-                    vehicle.fitnessExp,
-                    vehicle.licenseExp,
-                    vehicle.fuelType,
-                    vehicle.unladenWeight,
+                    vehicle.insurance_exp,
+                    vehicle.fitness_exp,
+                    vehicle.license_exp,
+                    vehicle.unladen_weight,
                     vehicle.model,
                     vehicle.make,
-                    vehicle.engineId,
-                    vehicle.chassisId,
+                    vehicle.engine_id,
+                    vehicle.chassis_id,
                 ),
             )
 
@@ -72,10 +71,10 @@ class Database:
             self.cursor.execute(
                 "INSERT INTO driver_table (firstName, lastName, address, phoneNumber, department) VALUES (%s, %s, %s, %s, %s)",
                 (
-                    driver.firstName,
-                    driver.lastName,
+                    driver.first_name,
+                    driver.last_name,
                     driver.address,
-                    driver.phoneNumber,
+                    driver.phone_number,
                     driver.department,
                 ),
             )
@@ -91,7 +90,7 @@ class Database:
                 (
                     repair.price,
                     repair.description,
-                    repair.repairText,
+                    repair.repair_text,
                 ),
             )
         except mysql.connector.Error as e:
@@ -105,13 +104,10 @@ class Database:
                 "INSERT INTO mechanic_table (name, phoneNumber, address) VALUES (%s, %s, %s)",
                 (
                     mechanic.name,
-                    mechanic.phoneNumber,
+                    mechanic.phone_number,
                     mechanic.address,
                 ),
             )
         except mysql.connector.Error as e:
             print(f"Error executing SQL for table {mechanic.name}: {e}")
             self.connection.rollback()
-
-if __name__ == "__main__":
-    db = Database()
