@@ -5,7 +5,7 @@ from dataclasses import dataclass
 @dataclass
 class Vehicle:
     """Class representing a vehicle"""
-
+    # pylint: disable=too-many-instance-attributes
     def __init__(
         self,
         district,
@@ -20,6 +20,7 @@ class Vehicle:
         engine_id,
         chassis_id,
     ):
+        # pylint: disable=too-many-arguments
         self.district = district
         self.section = section
         self.insurance_exp = insurance_exp
@@ -38,6 +39,7 @@ class Driver:
     """Class representing a driver"""
 
     def __init__(self, first_name, last_name, address, phone_number, department):
+        # pylint: disable=too-many-arguments
         self.first_name = first_name
         self.last_name = last_name
         self.address = address

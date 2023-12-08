@@ -116,3 +116,4 @@ class Database:
         except mysql.connector.Error as e:
             print(f"Error executing SQL for table mechanic: {e}")
             self.connection.rollback()
+            
