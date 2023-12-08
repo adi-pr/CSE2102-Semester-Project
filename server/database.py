@@ -2,7 +2,7 @@
 
 import mysql.connector
 
-
+# pylint: disable=line-too-long
 class Database:
     """Class representing a database"""
 
@@ -25,7 +25,6 @@ class Database:
         """Code to add tables to database"""
 
         # Dictionary for tables and the query used to create them
-        # pylint: disable=line-too-long
         tables = {
             "vehicle_table": "CREATE TABLE IF NOT EXISTS vehicle (VID INT(6) PRIMARY KEY NOT NULL AUTO_INCREMENT, district VARCHAR(20), section VARCHAR(40), insuranceExp DATE, fitnessExp DATE, licenseExp DATE, vehicleNum INT(9), type VARCHAR(15), fuelType VARCHAR(15), unladenWeight INT(6), model VARCHAR(50), make VARCHAR(20), engineId VARCHAR(30), chassisId VARCHAR(30));",
             "driver_table": "CREATE TABLE IF NOT EXISTS driver (DID INT(6) PRIMARY KEY NOT NULL AUTO_INCREMENT, phoneNumber INT(10), firstName VARCHAR(20), lastName VARCHAR(20), address VARCHAR(125), department VARCHAR(30));",
@@ -47,14 +46,13 @@ class Database:
         """Code to add a vehicle to the vehicle table"""
         try:
             self.cursor.execute(
-                "INSERT INTO driver_table (district, section, insuranceExp, fitnessExp, licenseExp, type, fuelType, unladenWeight, model, make, engineId, chassisId) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)",
+                "INSERT INTO driver_table (district, section, insuranceExp, fitnessExp, licenseExp, fuelType, unladenWeight, model, make, engineId, chassisId) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)",
                 (
                     vehicle.district,
                     vehicle.section,
                     vehicle.insuranceExp,
                     vehicle.fitnessExp,
                     vehicle.licenseExp,
-                    vehicle.type,
                     vehicle.fuelType,
                     vehicle.unladenWeight,
                     vehicle.model,
