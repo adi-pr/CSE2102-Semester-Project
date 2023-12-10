@@ -15,6 +15,11 @@ class VehicleController:
         vehicle = Vehicle(**vehicle_data)
         db.write_vehicle(vehicle)
 
+    @staticmethod
+    def update_vehicle_to_database(vehicle_id, field_name, new_value):
+        """Function writing vehicle to database"""
+        db.update_vehicle(vehicle_id, field_name, new_value)
+
 
 class DriverController:
     """Class representing a driver controller"""

@@ -2,6 +2,7 @@
 
 import mysql.connector
 
+
 # pylint: disable=line-too-long
 class Database:
     """Class representing a database"""
@@ -67,6 +68,25 @@ class Database:
             print(f"Error executing SQL for table vehicle: {e}")
             self.connection.rollback()
 
+    def update_vehicle(self, vehicle_id, field_name, new_value):
+        """Update a specific field for a vehicle in the vehicle table"""
+        try:
+            # Construct the SQL query dynamically based on the provided field name
+            update_query = f"UPDATE vehicle SET {field_name} = %s WHERE VID = %s"
+
+            # Execute the update query with the new value and vehicle ID
+            self.cursor.execute(update_query, (new_value, vehicle_id))
+
+            # Commit the changes
+            self.connection.commit()
+
+            print(
+                f"Field '{field_name}' updated successfully for vehicle with ID {vehicle_id}"
+            )
+        except mysql.connector.Error as e:
+            print(f"Error executing SQL for updating field '{field_name}' in vehicle table: {e}")
+            self.connection.rollback()
+
     def write_driver(self, driver):
         """Code to add a driver to the driver table"""
         try:
@@ -116,4 +136,3 @@ class Database:
         except mysql.connector.Error as e:
             print(f"Error executing SQL for table mechanic: {e}")
             self.connection.rollback()
-            
