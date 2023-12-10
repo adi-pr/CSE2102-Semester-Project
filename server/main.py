@@ -1,5 +1,13 @@
+"""Module to test database code"""
+
+
 from database import Database
-from controllers import VehicleController, DriverController, RepairController, MechanicController
+from controllers import (
+    VehicleController,
+    DriverController,
+    RepairController,
+    MechanicController,
+)
 
 if __name__ == "__main__":
     # Test data
@@ -14,7 +22,7 @@ if __name__ == "__main__":
         "model": "TestModel",
         "make": "TestMake",
         "engine_id": "TestEngine123",
-        "chassis_id": "TestChassis456"
+        "chassis_id": "TestChassis456",
     }
 
     driver_data = {
@@ -22,19 +30,19 @@ if __name__ == "__main__":
         "last_name": "TestLastName",
         "address": "TestAddress",
         "phone_number": 1234567890,
-        "department": "TestDepartment"
+        "department": "TestDepartment",
     }
 
     repair_data = {
         "price": 75.0,
         "description": "TestRepairDescription",
-        "repair_text": "TestRepairText"
+        "repair_text": "TestRepairText",
     }
 
     mechanic_data = {
         "name": "TestMechanicName",
         "phone_number": 987654321,
-        "address": "TestMechanicAddress"
+        "address": "TestMechanicAddress",
     }
 
     # Write test data to the database
