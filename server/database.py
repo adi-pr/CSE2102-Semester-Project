@@ -84,7 +84,22 @@ class Database:
                 f"Field '{field_name}' updated successfully for vehicle with ID {vehicle_id}"
             )
         except mysql.connector.Error as e:
-            print(f"Error executing SQL for updating field '{field_name}' in vehicle table: {e}")
+            print(
+                f"Error executing SQL for updating field '{field_name}' in vehicle table: {e}"
+            )
+            self.connection.rollback()
+
+    def delete_field(self, table, id):
+        """Code to delete a record form the specified table"""
+
+        try:
+            query = f"DELETE FROM {table} WHERE ID = %s"
+            self.cursor.execute(query, (id))
+            self.connection.commit()
+            print("Record added")
+
+        except mysql.connector.Error as e:
+            print(f"Error executing SQL for table '{table}': {e}")
             self.connection.rollback()
 
     def write_driver(self, driver):
