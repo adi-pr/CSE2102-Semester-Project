@@ -27,10 +27,53 @@ class Database:
 
         # Dictionary for tables and the query used to create them
         tables = {
-            "vehicle_table": "CREATE TABLE IF NOT EXISTS vehicle (VID INT(6) PRIMARY KEY NOT NULL AUTO_INCREMENT, district VARCHAR(20), section VARCHAR(40), insuranceExp DATE, fitnessExp DATE, licenseExp DATE, vehicleNum VARCHAR(10), type VARCHAR(15), fuelType VARCHAR(15), unladenWeight INT(6), model VARCHAR(50), make VARCHAR(20), engineId VARCHAR(30), chassisId VARCHAR(30));",
-            "driver_table": "CREATE TABLE IF NOT EXISTS driver (DID INT(6) PRIMARY KEY NOT NULL AUTO_INCREMENT, phoneNumber INT(10), firstName VARCHAR(20), lastName VARCHAR(20), address VARCHAR(125), department VARCHAR(30));",
-            "repair_table": "CREATE TABLE IF NOT EXISTS repair (RID INT(6) PRIMARY KEY NOT NULL AUTO_INCREMENT, price DECIMAL(7,2), description TEXT, repairText TEXT);",
-            "mechanic_table": "CREATE TABLE IF NOT EXISTS mechanic (MID INT(6) PRIMARY KEY NOT NULL AUTO_INCREMENT, name VARCHAR(50), phoneNumber INT(10), address VARCHAR(125));",
+            "vehicle_table": """
+            CREATE TABLE IF NOT EXISTS vehicle (
+                VID INT(6) PRIMARY KEY NOT NULL AUTO_INCREMENT,
+                district VARCHAR(20),
+                section VARCHAR(40),
+                insuranceExp DATE,
+                fitnessExp DATE,
+                licenseExp DATE,
+                vehicleNum VARCHAR(10),
+                fuelType VARCHAR(15),
+                unladenWeight INT(6),
+                model VARCHAR(50),
+                make VARCHAR(20),
+                engineId VARCHAR(30),
+                chassisId VARCHAR(30),
+                driverID INT(6),
+                FOREIGN KEY (driverID) REFERENCES driver(DID)
+            );
+        """,
+            "driver_table": """
+            CREATE TABLE IF NOT EXISTS driver (
+                DID INT(6) PRIMARY KEY NOT NULL AUTO_INCREMENT,
+                phoneNumber INT(10),
+                firstName VARCHAR(20),
+                lastName VARCHAR(20),
+                address VARCHAR(125),
+                department VARCHAR(30)
+            );
+        """,
+            "repair_table": """
+            CREATE TABLE IF NOT EXISTS repair (
+                RID INT(6) PRIMARY KEY NOT NULL AUTO_INCREMENT,
+                price DECIMAL(7,2),
+                description TEXT,
+                repairText TEXT,
+                vehicleID INT(6),
+                FOREIGN KEY (vehicleID) REFERENCES vehicle(VID)
+            );
+        """,
+            "mechanic_table": """
+            CREATE TABLE IF NOT EXISTS mechanic (
+                MID INT(6) PRIMARY KEY NOT NULL AUTO_INCREMENT,
+                name VARCHAR(50),
+                phoneNumber INT(10),
+                address VARCHAR(125)
+            );
+        """,
         }
 
         print("Creating Tables")
@@ -47,7 +90,7 @@ class Database:
         """Code to add a vehicle to the vehicle table"""
         try:
             self.cursor.execute(
-                "INSERT INTO vehicle (district, section, insuranceExp, fitnessExp, licenseExp, vehicleNum, fuelType, unladenWeight, model, make, engineId, chassisId) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)",
+                "INSERT INTO vehicle (district, section, insuranceExp, fitnessExp, licenseExp, vehicleNum, fuelType, unladenWeight, model, make, engineId, chassisId, driverId) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)",
                 (
                     vehicle.district,
                     vehicle.section,
@@ -61,6 +104,7 @@ class Database:
                     vehicle.make,
                     vehicle.engine_id,
                     vehicle.chassis_id,
+                    vehicle.driver_id,
                 ),
             )
             self.connection.commit()
@@ -143,11 +187,12 @@ class Database:
         """Code to add a repair to the repair table"""
         try:
             self.cursor.execute(
-                "INSERT INTO repair (price, description, repairText) VALUES (%s, %s, %s)",
+                "INSERT INTO repair (price, description, repairText, vehicleID) VALUES (%s, %s, %s, %s)",
                 (
                     repair.price,
                     repair.description,
                     repair.repair_text,
+                    repair.vehicle_id,
                 ),
             )
             self.connection.commit()
@@ -171,23 +216,57 @@ class Database:
             print(f"Error executing SQL for table mechanic: {e}")
             self.connection.rollback()
 
-def calculate_total_repair_cost_for_vehicle(self, vehicle_num):
+    def calculate_total_repair_cost(self, vehicle_num):
         """Calculate the total sum of repair costs for a specific vehicle identified by 'vehicle_num'."""
         try:
             # Construct the SQL query to get the total repair cost for the specified vehicle
             query = """
                     SELECT SUM(r.price) 
-                    FROM repair r
-                    JOIN vehicle v ON r.vehicle_id = v.VID
-                    WHERE v.vehicleNum = %s
+                    FROM repair 
+                    JOIN vehicle v ON vehicleID = VID
+                    WHERE vehicleNum = %s
                     """
             self.cursor.execute(query, (vehicle_num,))
             total_repair_cost = self.cursor.fetchone()[0]
 
-            if total_repair_cost is not None:
-                return total_repair_cost
-            else:
-                return 0  # Return 0 if there are no repair costs for the specified vehicle
+            print(total_repair_cost)
 
         except mysql.connector.Error as e:
             print(f"Error executing SQL for calculating total repair cost: {e}")
+
+    def get_vehicle_repairs(self, vehicle_number):
+        """Get repairs for a specific vehicle based on the given vehicle number."""
+
+        try:
+            vehicle_query = "SELECT VID FROM vehicle WHERE vehicleNum = %s"
+            self.cursor.execute(vehicle_query, (vehicle_number,))
+            vehicle_res = self.cursor.fetchone()
+
+            print(vehicle_res)
+
+            if vehicle_res:
+                vehicle_id = vehicle_res[0]
+
+                print(vehicle_id)
+
+                # Consume any remaining results from the previous query
+                self.cursor.fetchall()
+
+                # Query repairs for the found vehicle ID
+                repairs_query = "SELECT * FROM repair WHERE vehicleID = %s"
+                self.cursor.execute(repairs_query, (vehicle_id,))
+                repair_res = self.cursor.fetchall()
+
+                print(repair_res)
+
+                if repair_res:
+                    for repair in repair_res:
+                        print(repair)
+                else:
+                    print("No repairs found for the given vehicle.")
+
+            else:
+                print("No vehicle found with the given vehicle number.")
+
+        except mysql.connector.Error as e:
+            print(f"Error executing SQL for getting vehicle repairs: {e}")

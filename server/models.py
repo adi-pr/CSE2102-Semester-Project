@@ -20,6 +20,7 @@ class Vehicle:
         make,
         engine_id,
         chassis_id,
+        driver_id,
     ):
         # pylint: disable=too-many-arguments
         self.district = district
@@ -34,6 +35,7 @@ class Vehicle:
         self.make = make
         self.engine_id = engine_id
         self.chassis_id = chassis_id
+        self.driver_id = driver_id
 
 
 @dataclass
@@ -53,10 +55,11 @@ class Driver:
 class Repair:
     """Class representing the repair"""
 
-    def __init__(self, price, description, repair_text):
+    def __init__(self, price, description, repair_text, vehicle_id):
         self.price = price
         self.description = description
         self.repair_text = repair_text
+        self.vehicle_id = vehicle_id
 
 
 @dataclass
