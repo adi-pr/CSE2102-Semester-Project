@@ -1,10 +1,9 @@
+# pylint:  disable=invalid-name
 """ Module providing functions to interact with view """
-
-import tkinter as tk
 from tkinter import ttk
 
-
 class AddVehicleTab:
+    # pylint:  disable=too-few-public-methods
     """Class representing add vehicle tab"""
 
     def __init__(self, tab_control, controller):

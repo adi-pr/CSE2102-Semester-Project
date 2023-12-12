@@ -89,12 +89,12 @@ class Database:
             )
             self.connection.rollback()
 
-    def delete_field(self, table, id):
+    def delete_field(self, table, field_id):
         """Code to delete a record form the specified table"""
 
         try:
             query = f"DELETE FROM {table} WHERE ID = %s"
-            self.cursor.execute(query, (id))
+            self.cursor.execute(query, (field_id))
             self.connection.commit()
             print("Record added")
 
