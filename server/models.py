@@ -13,6 +13,7 @@ class Vehicle:
         insurance_exp,
         fitness_exp,
         license_exp,
+        vehicle_num,
         fuel_type,
         unladen_weight,
         model,
@@ -27,6 +28,7 @@ class Vehicle:
         self.fitness_exp = fitness_exp
         self.license_exp = license_exp
         self.fuel_type = fuel_type
+        self.vehicle_num = vehicle_num
         self.unladen_weight = unladen_weight
         self.model = model
         self.make = make

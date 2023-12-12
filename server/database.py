@@ -27,7 +27,7 @@ class Database:
 
         # Dictionary for tables and the query used to create them
         tables = {
-            "vehicle_table": "CREATE TABLE IF NOT EXISTS vehicle (VID INT(6) PRIMARY KEY NOT NULL AUTO_INCREMENT, district VARCHAR(20), section VARCHAR(40), insuranceExp DATE, fitnessExp DATE, licenseExp DATE, vehicleNum INT(9), type VARCHAR(15), fuelType VARCHAR(15), unladenWeight INT(6), model VARCHAR(50), make VARCHAR(20), engineId VARCHAR(30), chassisId VARCHAR(30));",
+            "vehicle_table": "CREATE TABLE IF NOT EXISTS vehicle (VID INT(6) PRIMARY KEY NOT NULL AUTO_INCREMENT, district VARCHAR(20), section VARCHAR(40), insuranceExp DATE, fitnessExp DATE, licenseExp DATE, vehicleNum VARCHAR(10), type VARCHAR(15), fuelType VARCHAR(15), unladenWeight INT(6), model VARCHAR(50), make VARCHAR(20), engineId VARCHAR(30), chassisId VARCHAR(30));",
             "driver_table": "CREATE TABLE IF NOT EXISTS driver (DID INT(6) PRIMARY KEY NOT NULL AUTO_INCREMENT, phoneNumber INT(10), firstName VARCHAR(20), lastName VARCHAR(20), address VARCHAR(125), department VARCHAR(30));",
             "repair_table": "CREATE TABLE IF NOT EXISTS repair (RID INT(6) PRIMARY KEY NOT NULL AUTO_INCREMENT, price DECIMAL(7,2), description TEXT, repairText TEXT);",
             "mechanic_table": "CREATE TABLE IF NOT EXISTS mechanic (MID INT(6) PRIMARY KEY NOT NULL AUTO_INCREMENT, name VARCHAR(50), phoneNumber INT(10), address VARCHAR(125));",
@@ -47,13 +47,14 @@ class Database:
         """Code to add a vehicle to the vehicle table"""
         try:
             self.cursor.execute(
-                "INSERT INTO vehicle (district, section, insuranceExp, fitnessExp, licenseExp, fuelType, unladenWeight, model, make, engineId, chassisId) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)",
+                "INSERT INTO vehicle (district, section, insuranceExp, fitnessExp, licenseExp, vehicleNum, fuelType, unladenWeight, model, make, engineId, chassisId) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)",
                 (
                     vehicle.district,
                     vehicle.section,
                     vehicle.insurance_exp,
                     vehicle.fitness_exp,
                     vehicle.license_exp,
+                    vehicle.vehicle_num,
                     vehicle.fuel_type,
                     vehicle.unladen_weight,
                     vehicle.model,
@@ -88,6 +89,24 @@ class Database:
                 f"Error executing SQL for updating field '{field_name}' in vehicle table: {e}"
             )
             self.connection.rollback()
+
+    def find_vehicle_number(self, vehicle_number):
+        """Find a vehicle number based on the given vehicle number."""
+
+        try:
+            query = "SELECT * FROM vehicle WHERE vehicleNum = %s"
+            self.cursor.execute(query, (vehicle_number,))
+            result = self.cursor.fetchall()
+
+            if result:
+                print(result[0])
+
+            else:
+                print("No vehicle found with the given criteria.")
+                return None
+
+        except mysql.connector.Error as e:
+            print(f"Error executing SQL for finding vehicle number: {e}")
 
     def delete_field(self, table, field_id):
         """Code to delete a record form the specified table"""
@@ -151,3 +170,24 @@ class Database:
         except mysql.connector.Error as e:
             print(f"Error executing SQL for table mechanic: {e}")
             self.connection.rollback()
+
+def calculate_total_repair_cost_for_vehicle(self, vehicle_num):
+        """Calculate the total sum of repair costs for a specific vehicle identified by 'vehicle_num'."""
+        try:
+            # Construct the SQL query to get the total repair cost for the specified vehicle
+            query = """
+                    SELECT SUM(r.price) 
+                    FROM repair r
+                    JOIN vehicle v ON r.vehicle_id = v.VID
+                    WHERE v.vehicleNum = %s
+                    """
+            self.cursor.execute(query, (vehicle_num,))
+            total_repair_cost = self.cursor.fetchone()[0]
+
+            if total_repair_cost is not None:
+                return total_repair_cost
+            else:
+                return 0  # Return 0 if there are no repair costs for the specified vehicle
+
+        except mysql.connector.Error as e:
+            print(f"Error executing SQL for calculating total repair cost: {e}")
