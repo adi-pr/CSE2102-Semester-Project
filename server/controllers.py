@@ -52,3 +52,9 @@ class MechanicController:
         """Function writing a mechanic to database"""
         mechanic = Mechanic(**mechanic_data)
         db.write_mechanic(mechanic)
+
+
+class Controller(
+    VehicleController, DriverController, RepairController, MechanicController
+):
+    """Class representing a controller for various entities"""
