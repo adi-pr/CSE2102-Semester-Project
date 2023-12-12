@@ -217,22 +217,27 @@ class Database:
             self.connection.rollback()
 
     def calculate_total_repair_cost(self, vehicle_num):
-        """Calculate the total sum of repair costs for a specific vehicle identified by 'vehicle_num'."""
-        try:
-            # Construct the SQL query to get the total repair cost for the specified vehicle
-            query = """
-                    SELECT SUM(r.price) 
-                    FROM repair 
-                    JOIN vehicle v ON vehicleID = VID
-                    WHERE vehicleNum = %s
-                    """
-            self.cursor.execute(query, (vehicle_num,))
-            total_repair_cost = self.cursor.fetchone()[0]
+        """Get the total repair cost for a specific vehicle based on the given vehicle number."""
 
-            print(total_repair_cost)
+        try:
+            # Query repairs for the specified vehicle number and calculate the total cost using SUM
+            repairs_query = """
+                    SELECT SUM(price) FROM repair
+                    WHERE vehicleID = (SELECT VID FROM vehicle WHERE vehicleNum = %s)
+                """
+            self.cursor.execute(repairs_query, (vehicle_num,))
+            total_cost_res = self.cursor.fetchone()
+
+            if total_cost_res[0] is not None:
+                total_cost = total_cost_res[0]
+                print(total_cost)
+            else:
+                print("No repairs found for the given vehicle.")
+                return 0
 
         except mysql.connector.Error as e:
-            print(f"Error executing SQL for calculating total repair cost: {e}")
+            print(f"Error executing SQL for getting total repair cost: {e}")
+            return 0
 
     def get_vehicle_repairs(self, vehicle_number):
         """Get repairs for a specific vehicle based on the given vehicle number."""
