@@ -2,12 +2,7 @@
 
 
 from database import Database
-from controllers import (
-    VehicleController,
-    DriverController,
-    RepairController,
-    MechanicController,
-)
+from controllers import Controller
 
 if __name__ == "__main__":
     # Test data
@@ -46,10 +41,10 @@ if __name__ == "__main__":
     }
 
     # Write test data to the database
-    VehicleController.write_vehicle_to_database(vehicle_data)
-    DriverController.write_driver_to_database(driver_data)
-    RepairController.write_repair_to_database(repair_data)
-    MechanicController.write_mechanic_to_database(mechanic_data)
+    Controller.write_vehicle_to_database(vehicle_data)
+    Controller.write_driver_to_database(driver_data)
+    Controller.write_repair_to_database(repair_data)
+    Controller.write_mechanic_to_database(mechanic_data)
 
     # Fetch and print data from the database
     db = Database()
