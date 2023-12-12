@@ -20,6 +20,16 @@ class VehicleController:
         """Function writing vehicle to database"""
         db.update_vehicle(vehicle_id, field_name, new_value)
 
+    @staticmethod
+    def get_repair(vehicle_num):
+        """Function to get the repairs done on a vehicle"""
+        db.get_vehicle_repairs(vehicle_num)
+
+    @staticmethod
+    def get_total_repair_cost(vehicle_num):
+        """Function to get the total repair cst of a vehicle"""
+        db.calculate_total_repair_cost(vehicle_num)
+
 
 class DriverController:
     """Class representing a driver controller"""
