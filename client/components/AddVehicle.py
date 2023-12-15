@@ -24,12 +24,13 @@ class AddVehicleTab:
             "model": "Model:",
             "make": "Make:",
             "engine_id": "Engine ID:",
-            "chassis_id":"Chassis ID:",
+            "chassis_id": "Chassis ID:",
             "driver_id": "Driver ID",
         }
 
         self.entries = [ttk.Entry(self.tab) for _ in self.labels]
 
+        # pylint:  disable=unused-variable
         for i, (key, label_text) in enumerate(self.labels.items()):
             label = ttk.Label(self.tab, text=label_text, anchor="e")
             label.grid(row=i, column=0, padx=15, pady=15)
@@ -44,10 +45,10 @@ class AddVehicleTab:
     def add_vehicle(self):
         """Function to extract form data and commit to database"""
         form_data = {}
-        
+
         for key, entry in zip(self.labels.keys(), self.entries):
             form_data[key] = entry.get()
-            
+
         print(form_data)
 
         self.controller.write_vehicle_to_database(form_data)
