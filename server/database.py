@@ -27,6 +27,16 @@ class Database:
 
         # Dictionary for tables and the query used to create them
         tables = {
+            "driver_table": """
+            CREATE TABLE IF NOT EXISTS driver (
+                DID INT(6) PRIMARY KEY NOT NULL AUTO_INCREMENT,
+                phoneNumber INT(10),
+                firstName VARCHAR(20),
+                lastName VARCHAR(20),
+                address VARCHAR(125),
+                department VARCHAR(30)
+            );
+        """,
             "vehicle_table": """
             CREATE TABLE IF NOT EXISTS vehicle (
                 VID INT(6) PRIMARY KEY NOT NULL AUTO_INCREMENT,
@@ -44,16 +54,6 @@ class Database:
                 chassisId VARCHAR(30),
                 driverID INT(6),
                 FOREIGN KEY (driverID) REFERENCES driver(DID)
-            );
-        """,
-            "driver_table": """
-            CREATE TABLE IF NOT EXISTS driver (
-                DID INT(6) PRIMARY KEY NOT NULL AUTO_INCREMENT,
-                phoneNumber INT(10),
-                firstName VARCHAR(20),
-                lastName VARCHAR(20),
-                address VARCHAR(125),
-                department VARCHAR(30)
             );
         """,
             "repair_table": """
@@ -247,12 +247,8 @@ class Database:
             self.cursor.execute(vehicle_query, (vehicle_number,))
             vehicle_res = self.cursor.fetchone()
 
-            print(vehicle_res)
-
             if vehicle_res:
                 vehicle_id = vehicle_res[0]
-
-                print(vehicle_id)
 
                 # Consume any remaining results from the previous query
                 self.cursor.fetchall()
@@ -261,8 +257,6 @@ class Database:
                 repairs_query = "SELECT * FROM repair WHERE vehicleID = %s"
                 self.cursor.execute(repairs_query, (vehicle_id,))
                 repair_res = self.cursor.fetchall()
-
-                print(repair_res)
 
                 if repair_res:
                     for repair in repair_res:
