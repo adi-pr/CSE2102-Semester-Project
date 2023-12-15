@@ -27,7 +27,7 @@ class AddMechanicTab:
             self.entries[i].grid(row=i, column=1, padx=15, pady=15)
 
         # Create and place the submit button
-        button_commit = ttk.Button(self.tab, text="Add Book", command=self.add_mechanic)
+        button_commit = ttk.Button(self.tab, text="Add Mechanic", command=self.add_mechanic)
         button_commit.grid(
             row=len(self.labels), column=0, columnspan=2, padx=15, pady=15
         )
